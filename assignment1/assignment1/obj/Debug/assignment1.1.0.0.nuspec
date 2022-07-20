@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>assignment1</id>
+    <version>1.0.0</version>
+    <authors>assignment1</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="Amazon.Lambda.APIGatewayEvents" version="2.5.0" exclude="Build,Analyzers" />
+        <dependency id="Amazon.Lambda.Core" version="2.1.0" exclude="Build,Analyzers" />
+        <dependency id="Amazon.Lambda.Serialization.SystemTextJson" version="2.3.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\user\source\repos\assignment1\assignment1\bin\Debug\netcoreapp3.1\assignment1.runtimeconfig.json" target="lib\netcoreapp3.1\assignment1.runtimeconfig.json" />
+    <file src="C:\Users\user\source\repos\assignment1\assignment1\bin\Debug\netcoreapp3.1\assignment1.dll" target="lib\netcoreapp3.1\assignment1.dll" />
+  </files>
+</package>
