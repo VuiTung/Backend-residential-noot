@@ -13,11 +13,11 @@ namespace assignment1
     public class WarningRecord
     {
         public static async Task<APIGatewayProxyResponse> InsertWarningRecord(APIGatewayProxyRequest input, ILambdaContext context)
-        {
+        {   
+            
             var data = System.Text.Json.JsonSerializer.Deserialize<WarningRecordModel>(input.Body);
-            Console.WriteLine(data.ToString());
             try
-            {
+            {   
                 var str = "Server=myresidentialnoot.cm9dthnstss7.us-east-1.rds.amazonaws.com, 1433;Database=Residential Noot;User Id=admin;Password=admin123";
                 using (SqlConnection conn = new SqlConnection(str))
                 {
@@ -39,7 +39,7 @@ namespace assignment1
             {
                 Console.WriteLine(e.ToString());
                 return new APIGatewayProxyResponse()
-                {
+                {   
                     StatusCode = (int)HttpStatusCode.NotFound
                 };
             }
