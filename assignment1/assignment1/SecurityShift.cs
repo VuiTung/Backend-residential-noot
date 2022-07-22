@@ -102,6 +102,102 @@ namespace assignment1
             }
         }
 
+        public static async Task<APIGatewayProxyResponse> UpdateSecurityShift(APIGatewayProxyRequest input, ILambdaContext context)
+        {
+            var data = System.Text.Json.JsonSerializer.Deserialize<SecurityShiftModel>(input.Body);
+
+            Console.WriteLine(data.ToString());
+            try
+            {
+                var str = "Server=myresidentialnoot.cm9dthnstss7.us-east-1.rds.amazonaws.com, 1433;Database=Residential Noot;User Id=admin;Password=admin123";
+                using (SqlConnection conn = new SqlConnection(str))
+                {
+                    conn.Open();
+
+                    var text = $"Update SecurityShiftModel set SecurityID='{data.SecurityID }',StartTime= CONVERT(DATETIME, '{data.StartTime }', 3),EndTime=CONVERT(DATETIME, '{data.EndTime }', 3), Location='{data.Location }' where ShiftID= {data.ShiftID }";
+
+                    using (SqlCommand cmd2 = new SqlCommand(text, conn))
+                    {
+
+                        var rows2 = await cmd2.ExecuteNonQueryAsync();
+                        return new APIGatewayProxyResponse()
+                        {
+                            StatusCode = (int)HttpStatusCode.OK
+                        };
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return new APIGatewayProxyResponse()
+                {
+                    StatusCode = (int)HttpStatusCode.NotFound
+                };
+            }
+        }
+
+        public static async Task<APIGatewayProxyResponse> RetrieveIndiShift(APIGatewayProxyRequest input, ILambdaContext context)
+        {
+            string ShiftID = null;
+            input.QueryStringParameters?.TryGetValue("ShiftID", out ShiftID);
+            ShiftID = ShiftID ?? "5";
+            List<SecurityShiftModel> ShiftList = new List<SecurityShiftModel>();
+            try
+            {
+                var str = "Server=myresidentialnoot.cm9dthnstss7.us-east-1.rds.amazonaws.com, 1433;Database=Residential Noot;User Id=admin;Password=admin123";
+                using (SqlConnection conn = new SqlConnection(str))
+                {
+                    conn.Open();
+                    var text = "select * from SecurityShiftModel where ShiftID = " + ShiftID;
+
+                    SqlCommand cmd = new SqlCommand(text, conn);
+                    var reader = await cmd.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+                        SecurityShiftModel Shift = new SecurityShiftModel()
+                        {
+                            SecurityID = (string)reader["SecurityID"],
+                            StartTime = Convert.ToDateTime(reader["StartTime"]).ToString("dd/MM/yy hh:mm:ss t"),
+                            EndTime = Convert.ToDateTime(reader["EndTime"]).ToString("dd/MM/yy hh:mm:ss t"),
+                            Location = (string)reader["Location"],
+                            ShiftID = (int)reader["ShiftID"]
+                        };
+                        ShiftList.Add(Shift);
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+
+                return new APIGatewayProxyResponse()
+                {
+                    StatusCode = (int)HttpStatusCode.NoContent
+
+                };
+            }
+            if (ShiftList.Count > 0)
+            {
+
+                return new APIGatewayProxyResponse()
+                {
+                    Body = JsonConvert.SerializeObject(ShiftList),
+                    StatusCode = (int)HttpStatusCode.OK
+                };
+            }
+            else
+            {
+                return new APIGatewayProxyResponse()
+                {
+                    StatusCode = (int)HttpStatusCode.NotFound
+                };
+            }
+        }
+
+
         public static async Task<APIGatewayProxyResponse> DeleteShift(APIGatewayProxyRequest input, ILambdaContext context)
         {
             string ShiftID = null;

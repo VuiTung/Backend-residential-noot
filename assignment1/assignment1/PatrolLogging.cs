@@ -25,7 +25,7 @@ namespace assignment1
 
                     conn.Open();
 
-                    var text = $"Insert into PatrolLoggingModel (Location, LogginData, DataTime) Values ('{data.Location}','{data.LogginData}',CONVERT(DATETIME, '{data.DataTime}', 3))";
+                var text = $"Insert into PatrolLoggingModel (SecurityID, Location, LogginData, DataTime) Values ('{data.SecurityID}','{data.Location}','{data.LogginData}',CONVERT(DATETIME, '{data.DataTime}', 3))";
 
                     using (SqlCommand cmd2 = new SqlCommand(text, conn))
                     {
@@ -64,7 +64,8 @@ namespace assignment1
                     {
                         PatrolLoggingModel Patrol = new PatrolLoggingModel()
                         {
-                            SecurityID = (int)reader["SecurityID"],
+                            LoggingID = (int)reader["LoggingID"],
+                            SecurityID = (string)reader["SecurityID"],
                             Location = (string)reader["Location"],
                             LogginData = (string)reader["LogginData"],
                             DataTime = Convert.ToDateTime(reader["DataTime"]).ToString("dd/MM/yy hh:mm:ss t")
@@ -103,12 +104,51 @@ namespace assignment1
         }
 
 
+        public static async Task<APIGatewayProxyResponse> DeletePatrol(APIGatewayProxyRequest input, ILambdaContext context)
+        {
+            string LoggingID = null;
+            input.QueryStringParameters?.TryGetValue("LoggingID", out LoggingID);
+            LoggingID = LoggingID ?? "2";
+            List<PatrolLoggingModel> PatrolLoggingList = new List<PatrolLoggingModel>();
+
+            try
+            {
+                var str = "Server=myresidentialnoot.cm9dthnstss7.us-east-1.rds.amazonaws.com, 1433;Database=Residential Noot;User Id=admin;Password=admin123";
+                using (SqlConnection conn = new SqlConnection(str))
+                {
+                    conn.Open();
+
+                    var text = $"delete from PatrolLoggingModel where LoggingID = " + LoggingID;
+
+                    using (SqlCommand cmd2 = new SqlCommand(text, conn))
+                    {
+                        var rows2 = await cmd2.ExecuteNonQueryAsync();
+                        return new APIGatewayProxyResponse()
+                        {
+                            StatusCode = (int)HttpStatusCode.OK
+                        };
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return new APIGatewayProxyResponse()
+                {
+                    StatusCode = (int)HttpStatusCode.NotFound
+                };
+            }
+        }
+
+
+
     }
 
     public class PatrolLoggingModel
     {
+        public int LoggingID { get; set; }
 
-        public int SecurityID { get; set; }
+        public string SecurityID { get; set; }
 
         public string Location { get; set; }
 
