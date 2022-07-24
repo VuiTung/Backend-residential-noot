@@ -56,7 +56,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select * from PatrolLoggingModel order by SecurityID DESC ";
+                    var text = "select * from PatrolLoggingModel plm inner join AspNetUsers anu on anu.Id= plm.SecurityID order by SecurityID DESC ";
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();
@@ -65,7 +65,7 @@ namespace assignment1
                         PatrolLoggingModel Patrol = new PatrolLoggingModel()
                         {
                             LoggingID = (int)reader["LoggingID"],
-                            SecurityID = (string)reader["SecurityID"],
+                            SecurityID = (string)reader["UserName"],
                             Location = (string)reader["Location"],
                             LogginData = (string)reader["LogginData"],
                             DataTime = Convert.ToDateTime(reader["DataTime"]).ToString("dd/MM/yy hh:mm:ss t")

@@ -58,7 +58,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select * from BookingsModel order by BookID DESC ";
+                    var text = "select * from BookingsModel bm inner join AspNetUsers anu on anu.Id= bm.Resident_ID order by BookID DESC ";
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();
@@ -70,7 +70,7 @@ namespace assignment1
                             SlotID = (int)reader["SlotID"],
                             NumberOfPerson = (int)reader["NumberOfPerson"],
                             FacilityID = (int)reader["FacilityID"],
-                            Resident_ID = (string)reader["Resident_ID"],
+                            Resident_ID = (string)reader["UserName"],
                             Date= Convert.ToDateTime(reader["Date"]).ToString("dd/MM/yy hh:mm:ss t")
                         };
                         Bookinglist.Add(Booking);

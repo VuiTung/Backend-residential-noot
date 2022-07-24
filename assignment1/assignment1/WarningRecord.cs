@@ -55,7 +55,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select * from WarningRecordModel order by WarningID DESC ";
+                    var text = "select * from WarningRecordModel wrm inner join AspNetUsers anu on anu.Id= wrm.SecurityID order by WarningID DESC ";
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();
@@ -67,7 +67,7 @@ namespace assignment1
                             WarningInfo = (string)reader["WarningInfo"],
                             StartTime = Convert.ToDateTime(reader["StartTime"]).ToString("dd/MM/yy hh:mm:ss t"),
                             EndTime = Convert.ToDateTime(reader["EndTime"]).ToString("dd/MM/yy hh:mm:ss t"),
-                            SecurityID = (string)reader["SecurityID"]
+                            SecurityID = (string)reader["UserName"]
                         };
                         WarningList.Add(WarningRecord);
                     }

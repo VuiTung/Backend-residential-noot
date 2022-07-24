@@ -55,7 +55,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select * from SecurityShiftModel order by SecurityID DESC ";
+                    var text = "select * from SecurityShiftModel ssm inner join AspNetUsers anu on anu.Id= ssm.SecurityID order by SecurityID DESC ";
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();
@@ -63,7 +63,7 @@ namespace assignment1
                     {
                         SecurityShiftModel SecurityShift = new SecurityShiftModel()
                         {
-                            SecurityID = (string)reader["SecurityID"],
+                            SecurityID = (string)reader["UserName"],
                             ShiftID = (int)reader["ShiftID"],
                             StartTime = Convert.ToDateTime(reader["StartTime"]).ToString("dd/MM/yy hh:mm:ss t"),
                             EndTime = Convert.ToDateTime(reader["EndTime"]).ToString("dd/MM/yy hh:mm:ss t"),
@@ -150,7 +150,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select * from SecurityShiftModel where ShiftID = " + ShiftID;
+                    var text = "select * from SecurityShiftModel ssm inner join AspNetUsers anu on anu.Id= ssm.SecurityID where ShiftID = " + ShiftID;
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();
@@ -158,7 +158,7 @@ namespace assignment1
                     {
                         SecurityShiftModel Shift = new SecurityShiftModel()
                         {
-                            SecurityID = (string)reader["SecurityID"],
+                            SecurityID = (string)reader["UserName"],
                             StartTime = Convert.ToDateTime(reader["StartTime"]).ToString("dd/MM/yy hh:mm:ss t"),
                             EndTime = Convert.ToDateTime(reader["EndTime"]).ToString("dd/MM/yy hh:mm:ss t"),
                             Location = (string)reader["Location"],
