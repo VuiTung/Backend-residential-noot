@@ -148,7 +148,7 @@ namespace assignment1
                 using (SqlConnection conn = new SqlConnection(str))
                 {
                     conn.Open();
-                    var text = "select TOP 1  * from WarningRecordModel order by WarningID DESC";
+                    var text = "select TOP 1 * from WarningRecordModel where (select dateadd(MINUTE,datepart(tz,cast( getdate() as datetime) AT Time Zone 'Singapore Standard Time'), getdate())) < EndTime order by WarningID DESC";
 
                     SqlCommand cmd = new SqlCommand(text, conn);
                     var reader = await cmd.ExecuteReaderAsync();

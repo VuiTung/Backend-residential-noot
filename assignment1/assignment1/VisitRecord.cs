@@ -26,7 +26,7 @@ namespace assignment1
                 {
                     conn.Open();
 
-                    var text = $"Insert into VisitRecordModel (Reason, EnterTime, LeaveTime) Values ('{data.Reason}',CONVERT(DATETIME, '{data.EnterTime}', 3), CONVERT(DATETIME, '{data.LeaveTime}', 3))";
+                    var text = $"Insert into VisitRecordModel (Reason, EnterTime, LeaveTime, VisitorName) Values ('{data.Reason}',CONVERT(DATETIME, '{data.EnterTime}', 3), CONVERT(DATETIME, '{data.LeaveTime}', 3) , '{data.VisitorName}')";
 
                     using (SqlCommand cmd2 = new SqlCommand(text, conn))
                     {
@@ -66,6 +66,7 @@ namespace assignment1
                         VisitRecordModel VisitRecord = new VisitRecordModel()
                         {
                             VisitorID = (int)reader["VisitorID"],
+                            VisitorName = (string)reader["VisitorName"],
                             Reason = (string)reader["Reason"],
                             EnterTime = Convert.ToDateTime(reader["EnterTime"]).ToString("dd/MM/yy hh:mm:ss t"),
                             LeaveTime = Convert.ToDateTime(reader["LeaveTime"]).ToString("dd/MM/yy hh:mm:ss t")
@@ -143,6 +144,8 @@ namespace assignment1
     public class VisitRecordModel
     {
         public int VisitorID { get; set; }
+
+        public string VisitorName { get; set; }
 
         public string Reason { get; set; }
 
